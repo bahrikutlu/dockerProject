@@ -1,0 +1,4 @@
+/core/settings/.env
+/venv/
+/.idea/
+.gitignore

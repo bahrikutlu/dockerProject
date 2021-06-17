@@ -1,0 +1,24 @@
+# For guidance: https://www.youtube.com/watch?v=Oy71OgKZbOQ&t=86s
+# For guidance: https://github.com/veryacademy/YT-Django-Docker-Deploy-Heroku-Container/blob/main/commands.txt
+# CREATE A NEW DOCKER IMAGE
+docker build --tag django-base .
+
+# CREATE DOCKER CONTAINER AND RUN IT ON LOCAL PC. ASSUMING .env file is created under the settings folder with the necessary sensitive variables set
+# Also verify inside the "Dockerfile", CMD is selected as the right config for dev or gunicorn. Notice that the CMD for HEROKU is different
+# Publish a Docker container locally
+docker run --publish 8000:8000 django-base
+
+# Push the docker container to remote docker hub
+docker login
+docker images
+docker tag django-base:latest bahrikutlu/django-base:latest # this creates a copy of the image
+docker push bahrikutlu/django-base:latest
+
+# Go to heroku.com and create a project (can be done from CLI as well but it is easier from GUI, and you can select your app name)
+# Thi step is also a good time to create the environment variables in the settings tab
+# Install Heroku CLI if needed and restart.
+heroku login
+heroku container: login
+# change your app name as needed
+heroku container:push web -a=dockerprojectbahri  # creates a new image and pushes it to docker repo of Heroku
+heroku container:release -a dockerprojectbahri web
