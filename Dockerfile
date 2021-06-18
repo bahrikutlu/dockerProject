@@ -13,6 +13,9 @@ WORKDIR /app
 
 ADD . .
 
+# HEROKU DEPLOYMENT
+CMD gunicorn core.wsgi:application --bind 0.0.0.0:$PORT
+
 # DEV ENVIRONMENT
 #CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
 
@@ -20,5 +23,4 @@ ADD . .
 #EXPOSE 8000
 #CMD ["gunicorn", "--bind", ":8000", "--workers", "3", "core.wsgi:application"]
 
-# HEROKU DEPLOYMENT
-CMD gunicorn core.wsgi:application --bind 0.0.0.0:$PORT
+

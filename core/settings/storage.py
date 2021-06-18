@@ -16,7 +16,7 @@ try:
     AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')
     AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')
 except Exception as e:
-    print(f"Development environment, getting the variable from Heroku environment variables")
+    print(f"Development environment, getting the variable from environment variables")
     # Don't forget to create an environment variable on Heroku
     AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')

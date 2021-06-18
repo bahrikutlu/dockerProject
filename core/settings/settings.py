@@ -1,18 +1,16 @@
 import os
-from pathlib import Path
 import environ
+from .database import DATABASES, BASE_DIR
 
 env = environ.Env()
 environ.Env.read_env()
-
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 try:
     DEBUG = env.bool('DEBUG')
     SECRET_KEY = env('SECRET_KEY')
     ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
 except Exception as e:
-    print(f"Development environment, getting the variable from Heroku environment variables")
+    print(f"Development environment, getting the variable from servers environment variables")
     # Don't forget to create an environment variable on Heroku
     DEBUG = os.environ.get('DEBUG', False)
     SECRET_KEY = os.environ.get('SECRET_KEY', '1234')
@@ -62,52 +60,17 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-
-# Password validation
-# https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
+DATABASES = DATABASES
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/3.2/topics/i18n/
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator', },
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator', }, ]
 
 LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
+TIME_ZONE = 'America/Chicago'
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
-
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
