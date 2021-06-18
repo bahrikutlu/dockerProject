@@ -1,20 +1,24 @@
 import os
 import environ
 from .database import DATABASES, BASE_DIR
+from .admins_list import ADMINS_LIST
+import warnings
+import re
+
 
 env = environ.Env()
-environ.Env.read_env()
+with warnings.catch_warnings(record=True) as w:
+    environ.Env.read_env()
 
-try:
-    DEBUG = env.bool('DEBUG')
-    SECRET_KEY = env('SECRET_KEY')
-    ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
-except Exception as e:
-    print(f"Development environment, getting the variable from servers environment variables")
-    # Don't forget to create an environment variable on Heroku
-    DEBUG = os.environ.get('DEBUG', False)
-    SECRET_KEY = os.environ.get('SECRET_KEY', '1234')
-    ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', ['127.0.0.1'])
+env_file_is_missing = True if len(w) == 1 else False
+
+print(f"Development environment, getting the variable from servers environment variables") if env_file_is_missing else None
+
+DEBUG = os.environ.get('DEBUG', False) if env_file_is_missing else env.bool('DEBUG')
+
+SECRET_KEY = os.environ.get('SECRET_KEY', '1234') if env_file_is_missing else env('SECRET_KEY')
+
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', ['127.0.0.1']) if env_file_is_missing else env('ALLOWED_HOSTS').split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -74,3 +78,24 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+DEBUG = os.environ.get('DEBUG', False) if env_file_is_missing else env.bool('DEBUG')
+
+# EMAIL SETTINGS
+EMAIL_HOST = os.environ.get('EMAIL_HOST', False) if env_file_is_missing else env('EMAIL_HOST')
+EMAIL_PORT = os.environ.get('EMAIL_PORT', False) if env_file_is_missing else env('EMAIL_PORT')
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', False) if env_file_is_missing else env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', False) if env_file_is_missing else env('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', False) if env_file_is_missing else env('DEFAULT_FROM_EMAIL')
+
+# Email Configuration
+ADMINS = ADMINS_LIST
+MANAGERS = ADMINS
+
+IGNORABLE_404_URLS = [
+    re.compile(r'^/apple-touch-icon.*\.png$'),
+    re.compile(r'^/favicon\.ico$'),
+    re.compile(r'^/robots\.txt$'),
+]
+
